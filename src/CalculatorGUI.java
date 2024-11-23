@@ -6,8 +6,69 @@ import java.awt.event.ActionListener;
 public class CalculatorGUI extends JFrame implements ActionListener {
     private JTextField display;
     private JPanel buttonPanel;
+    private JPanel scientificButtonPanel;
     private String operator;
     private double num1, num2, result;
+    private boolean isScientificMode = false;
+    private Dimension defaultSize;
+
+
+    public CalculatorGUI() {
+        setTitle("Calculator");
+        setSize(300, 400);
+        defaultSize = new Dimension(300, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu viewMenu = new JMenu("Switch");
+        JMenuItem toggleScientificMode = new JMenuItem("Toggle Scientific Mode");
+        toggleScientificMode.addActionListener(e -> toggleMode());
+        viewMenu.add(toggleScientificMode);
+        menuBar.add(viewMenu);
+        setJMenuBar(menuBar);
+
+
+        display = new JTextField();
+        display.setFont(new Font("Arial", Font.BOLD, 24));
+        display.setHorizontalAlignment(SwingConstants.RIGHT);
+        display.setEditable(false);
+        add(display, BorderLayout.NORTH);
+
+
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(4, 4));
+        addStandardButtons();
+
+
+        scientificButtonPanel = new JPanel();
+        scientificButtonPanel.setLayout(new GridLayout(2, 4));
+        addScientificButtons();
+        scientificButtonPanel.setVisible(false);
+
+
+        add(buttonPanel, BorderLayout.CENTER);
+        add(scientificButtonPanel, BorderLayout.SOUTH);
+
+        setVisible(true);
+    }
+
+    private void addStandardButtons() {
+        String[] buttons = {"7", "8", "9", "/", "4", "5", "6", "*", "1", "2", "3", "-", "0", "C", "=", "+"};
+        for (String text : buttons) {
+            JButton button = createButton(text);
+            buttonPanel.add(button);
+        }
+    }
+
+    private void addScientificButtons() {
+        String[] sciButtons = {"sin", "cos", "tan", "√", "log", "ln", "π", "^"};
+        for (String text : sciButtons) {
+            JButton button = createButton(text);
+            scientificButtonPanel.add(button);
+        }
+    }
 
     private JButton createButton(String text) {
         JButton button = new JButton(text);
@@ -15,69 +76,32 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         button.setBackground(new Color(100, 100, 100));
         button.setForeground(Color.WHITE);
         button.addActionListener(this);
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(150, 150, 150));
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(100, 100, 100));
-            }
-        });
         return button;
     }
 
-    public CalculatorGUI() {
-        setTitle("Calculator");
-        setSize(300, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(50, 50, 50));
+    private void toggleMode() {
+        isScientificMode = !isScientificMode;
+        scientificButtonPanel.setVisible(isScientificMode);
 
-
-        display = new JTextField();
-        display.setFont(new Font("Arial", Font.BOLD, 24));
-        display.setHorizontalAlignment(SwingConstants.RIGHT);
-        display.setEditable(false);
-        display.setBackground(new Color(50, 50, 50));
-        display.setForeground(Color.WHITE);
-        add(display, BorderLayout.NORTH);
-
-
-        buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(5, 4));
-        buttonPanel.setBackground(new Color(30, 30, 30));
-
-
-        String[] buttons = {
-                "7", "8", "9", "/",
-                "4", "5", "6", "*",
-                "1", "2", "3", "-",
-                "0", "C", "=", "+",
-                "√", "^", "CE", "DEL"
-        };
-
-        for (String text : buttons) {
-            buttonPanel.add(createButton(text));
+        if (!isScientificMode) {
+            setSize(defaultSize);
+        } else {
+            pack();
         }
-
-        add(buttonPanel, BorderLayout.CENTER);
-
-        setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
-        if ("0123456789".contains(command)) {
-            display.setText(display.getText() + command);
-        } else if ("+-*/^".contains(command)) {
-            operator = command;
-            num1 = Double.parseDouble(display.getText());
-            display.setText("");
-        } else if ("=".equals(command)) {
-            try {
+        try {
+            if ("0123456789".contains(command)) {
+                display.setText(display.getText() + command);
+            } else if ("+-*/^".contains(command)) {
+                operator = command;
+                num1 = Double.parseDouble(display.getText());
+                display.setText("");
+            } else if ("=".equals(command)) {
                 num2 = Double.parseDouble(display.getText());
                 switch (operator) {
                     case "+" -> result = num1 + num2;
@@ -87,45 +111,35 @@ public class CalculatorGUI extends JFrame implements ActionListener {
                     case "^" -> result = Math.pow(num1, num2);
                 }
                 display.setText(String.valueOf(result));
-            } catch (ArithmeticException ex) {
-                display.setText("Error: " + ex.getMessage());
-            } catch (NumberFormatException ex) {
-                display.setText("Error");
-            }
-        } else if ("√".equals(command)) {
-            try {
+            } else if ("√".equals(command)) {
                 num1 = Double.parseDouble(display.getText());
-                if (num1 < 0) {
-                    display.setText("Error: √<0");
-                    return;
-                }
-                result = Math.sqrt(num1);
-                display.setText(String.valueOf(result));
-            } catch (NumberFormatException ex) {
-                display.setText("Error");
+                display.setText(String.valueOf(Math.sqrt(num1)));
+            } else if ("sin".equals(command)) {
+                num1 = Double.parseDouble(display.getText());
+                display.setText(String.valueOf(Math.sin(Math.toRadians(num1))));
+            } else if ("cos".equals(command)) {
+                num1 = Double.parseDouble(display.getText());
+                display.setText(String.valueOf(Math.cos(Math.toRadians(num1))));
+            } else if ("tan".equals(command)) {
+                num1 = Double.parseDouble(display.getText());
+                display.setText(String.valueOf(Math.tan(Math.toRadians(num1))));
+            } else if ("log".equals(command)) {
+                num1 = Double.parseDouble(display.getText());
+                display.setText(String.valueOf(Math.log10(num1)));
+            } else if ("ln".equals(command)) {
+                num1 = Double.parseDouble(display.getText());
+                display.setText(String.valueOf(Math.log(num1)));
+            } else if ("π".equals(command)) {
+                display.setText(String.valueOf(Math.PI));
+            } else if ("C".equals(command)) {
+                display.setText("");
             }
-        } else if ("C".equals(command)) {
-            display.setText("");
-            num1 = num2 = result = 0;
-            operator = "";
-        } else if ("CE".equals(command)) {
-            display.setText("");
-        } else if ("DEL".equals(command)) {
-            String currentText = display.getText();
-            if (!currentText.isEmpty()) {
-                display.setText(currentText.substring(0, currentText.length() - 1));
-            }
+        } catch (NumberFormatException ex) {
+            display.setText("Error");
         }
     }
 
     private double divide(double a, double b) {
-        if (b == 0) {
-            throw new ArithmeticException("Zero division");
-        }
+        if (b == 0) throw new ArithmeticException("Cannot divide by zero");
         return a / b;
-    }
-
-    public static void main(String[] args) {
-        new CalculatorGUI();
-    }
-}
+    }}
