@@ -5,7 +5,7 @@ A simple calculator developed in Java with a graphical interface using `Swing`. 
 ## Features
 
 - **Mathematical operations**: Addition, subtraction, multiplication, division, exponentiation.
-- **Scientific calculator function**: 
+- **Scientific calculator function**: After clicking on the “Switch” and “Toggle Scientific Mode” switches to the scientific calculator
 - **Square root**: Calculates the square root of positive numbers.
 - **Modern design**: Graphical interface with an intuitive layout.
 
