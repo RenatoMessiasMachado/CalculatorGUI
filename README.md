@@ -4,15 +4,18 @@ A simple calculator developed in Java with a graphical interface using `Swing`. 
 
 ## Features
 
-- Mathematical operations**: Addition, subtraction, multiplication, division, exponentiation.
-- Square root**: Calculates the square root of positive numbers.
+- **Mathematical operations**: Addition, subtraction, multiplication, division, exponentiation.
+- **Scientific calculator function**: After clicking on the “Switch” and “Toggle Scientific Mode” switches to the scientific calculator
+- **Square root**: Calculates the square root of positive numbers.
 - **Modern design**: Graphical interface with an intuitive layout.
 
+![calculator](images/calculator.png)<br/>
+![scientific-calculator](images/ScientificCalculator.PNG)
 ## How to use
 
 1. Download or clone this repository.
 2. Open the project in an IDE such as IntelliJ IDEA, Eclipse or NetBeans.
-3. Compile and run the `CalculatorGUI.java` file.
+3. Compile and run the `Main.java` file.
 
 ## How to run
 
@@ -23,5 +26,5 @@ Make sure you have [Java](https://www.oracle.com/java/technologies/javase-jdk11-
 To compile and run the program in the terminal, use the following commands:
 
 ```bash
-javac CalculatorGUI.java # Compile
-java CalculatorGUI # Run
+javac Main.java # Compile
+java Main # Run
