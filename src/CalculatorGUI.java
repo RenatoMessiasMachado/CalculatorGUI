@@ -19,6 +19,7 @@ public class CalculatorGUI extends JFrame implements ActionListener {
         defaultSize = new Dimension(300, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        setLocationRelativeTo(null);
 
 
         JMenuBar menuBar = new JMenuBar();
